@@ -7,6 +7,7 @@ using NHibernate.Util;
 using System.Net.Sockets;
 using StackExchange.Redis;
 using System.Runtime.Caching;
+using System.Threading;
 
 namespace NHibernate.Caches.Redis
 {
@@ -416,6 +417,36 @@ end
         private IDatabase GetDatabase()
         {
             return connectionMultiplexer.GetDatabase(options.Database);
+        }
+
+        public async Task<object> GetAsync(object key, CancellationToken cancellationToken)
+        {
+            return Get(key);
+        }
+
+        public async Task PutAsync(object key, object value, CancellationToken cancellationToken)
+        {
+            Put(key, value);
+        }
+
+        public async Task RemoveAsync(object key, CancellationToken cancellationToken)
+        {
+            Remove(key);
+        }
+
+        public async Task ClearAsync(CancellationToken cancellationToken)
+        {
+            Clear();
+        }
+
+        public async Task LockAsync(object key, CancellationToken cancellationToken)
+        {
+            Lock(key);
+        }
+
+        public async Task UnlockAsync(object key, CancellationToken cancellationToken)
+        {
+            Unlock(key);
         }
     }
 }
